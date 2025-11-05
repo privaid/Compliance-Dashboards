@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Letz Dream Foundation</title>
     <title>TDS Compliance Dashboard - FY 2025-26</title>
     <style>
         * {
@@ -272,8 +271,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 TDS Compliance Dashboard</h1>
-            <p>Financial Year 2025-26 | Real-time Compliance Tracking & Reporting</p>
+            <h1>Letz Dream Foundation</h1>
+            <p>📊 TDS Compliance Dashboard | Financial Year 2025-26</p>
         </div>
 
         <div class="controls">
@@ -365,7 +364,7 @@
                                 <th>TDS Amount</th>
                                 <th>Net Amount Paid</th>
                                 <th>TDS Deducted On</th>
-                                <th>Status</th>
+                                <th>Challan Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -385,7 +384,7 @@
                                 <th>Invoice Amount</th>
                                 <th>TDS Amount</th>
                                 <th>Net Amount</th>
-                                <th>Status</th>
+                                <th>Challan Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -611,11 +610,11 @@
             return date.toLocaleDateString('en-IN');
         }
 
-        function get Challan Status(tdsDeposited, tdsDeducted) {
+        function getStatus(tdsDeposited, tdsDeducted) {
             if (tdsDeposited && parseFloat(tdsDeposited) === parseFloat(tdsDeducted)) {
-                Challan 'Paid';
+                return 'Filed';
             } else if (tdsDeposited) {
-                Challan 'Not Paid';
+                return 'Partial';
             }
             return 'Pending';
         }
@@ -624,7 +623,7 @@
             // Populate Q3 Section A
             const q3SectionABody = document.querySelector('#q3-section-a tbody');
             dashboardData.Q3.section_a.forEach(item => {
-                const status = item['TDS Deposited On'] ? 'Paid' : 'Pending';
+                const status = item['Challan No.'] && item['Challan No.'] !== '' ? 'Paid' : 'Unpaid';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.Month}</td>
@@ -633,7 +632,7 @@
                     <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
                     <td class="currency">${formatCurrency(item['Net Amount Paid'])}</td>
                     <td>${formatDate(item['TDS Deducted On'])}</td>
-                    <td><span class="status-badge ${status === 'Paid' ? 'status-Paid' : 'status-pending'}">${status}</span></td>
+                    <td><span class="status-badge ${status === 'Paid' ? 'status-filed' : 'status-pending'}">${status}</span></td>
                 `;
                 q3SectionABody.appendChild(row);
             });
@@ -641,7 +640,7 @@
             // Populate Q3 Section B
             const q3SectionBBody = document.querySelector('#q3-section-b tbody');
             dashboardData.Q3.section_b.forEach(item => {
-                const status = item['TDS Deposited On'] ? 'Paid' : 'Pending';
+                const status = item['Challan No.'] && item['Challan No.'] !== '' ? 'Paid' : 'Unpaid';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.Month}</td>
@@ -651,7 +650,7 @@
                     <td class="currency">${formatCurrency(item['Invoice Amount'])}</td>
                     <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
                     <td class="currency">${typeof item['Net Amount Paid'] === 'string' ? item['Net Amount Paid'] : formatCurrency(item['Net Amount Paid'])}</td>
-                    <td><span class="status-badge ${status === 'Filed' ? 'status-filed' : 'status-pending'}">${status}</span></td>
+                    <td><span class="status-badge ${status === 'Paid' ? 'status-filed' : 'status-pending'}">${status}</span></td>
                 `;
                 q3SectionBBody.appendChild(row);
             });
