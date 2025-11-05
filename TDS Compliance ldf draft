@@ -348,12 +348,12 @@
                         <div class="card-value q3-summary" data-quarter="Q3" data-type="count">0</div>
                     </div>
                     <div class="card q3-color">
-                        <div class="card-label">Compliance Rate</div>
-                        <div class="card-value q3-summary" data-quarter="Q3" data-type="compliance">-</div>
+                        <div class="card-label">Sections</div>
+                        <div class="card-value">2</div>
                     </div>
                 </div>
 
-                <h3 class="subsection-title">Section A: Salaries & Wages (194D)</h3>
+                <h3 class="subsection-title">Section A: Salaries</h3>
                 <div class="table-wrapper">
                     <table id="q3-section-a">
                         <thead>
@@ -364,6 +364,9 @@
                                 <th>TDS Amount</th>
                                 <th>Net Amount Paid</th>
                                 <th>TDS Deducted On</th>
+                                <th>TDS Deposited On</th>
+                                <th>Challan No.</th>
+                                <th>Challan Date</th>
                                 <th>Challan Status</th>
                             </tr>
                         </thead>
@@ -372,7 +375,7 @@
                     </table>
                 </div>
 
-                <h3 class="subsection-title">Section B: Others (Non-Salary)</h3>
+                <h3 class="subsection-title">Section B: Others(Non-Salary)</h3>
                 <div class="table-wrapper">
                     <table id="q3-section-b">
                         <thead>
@@ -380,10 +383,16 @@
                                 <th>Month</th>
                                 <th>Deductee Name</th>
                                 <th>TDS Section</th>
-                                <th>TDS Rate</th>
+                                <th>TDS Rate (%)</th>
+                                <th>Invoice Date</th>
+                                <th>Invoice No.</th>
                                 <th>Invoice Amount</th>
                                 <th>TDS Amount</th>
-                                <th>Net Amount</th>
+                                <th>Net Amount Paid</th>
+                                <th>TDS Deducted On</th>
+                                <th>TDS Deposited On</th>
+                                <th>Challan No.</th>
+                                <th>Challan Date</th>
                                 <th>Challan Status</th>
                             </tr>
                         </thead>
@@ -534,7 +543,7 @@
                         "Month": "October",
                         "Deductee Name": "QNS Facility",
                         "TDS Section": "194 JA",
-                        "TDS Rate": 2%,
+                        "TDS Rate (%)": 0.02,
                         "Invoice Date": "",
                         "Invoice No.": "",
                         "Invoice Amount": 41087,
@@ -549,9 +558,9 @@
                         "Month": "October",
                         "Deductee Name": "S S Sharma and Associates",
                         "TDS Section": "194 JB",
-                        "TDS Rate": 10%,
-                        "Invoice Date": "",
-                        "Invoice No.": "",
+                        "TDS Rate (%)": 0.1,
+                        "Invoice Date": "31/10/2025",
+                        "Invoice No.": "SSSA/25-26/187",
                         "Invoice Amount": 23600,
                         "TDS Amount": 2000,
                         "Net Amount Paid": 21600,
@@ -564,13 +573,13 @@
                         "Month": "October",
                         "Deductee Name": "Rameshwar Rajak",
                         "TDS Section": "194 C",
-                        "TDS Rate": 1%,
+                        "TDS Rate (%)": 0.01,
                         "Invoice Date": "",
                         "Invoice No.": "",
                         "Invoice Amount": 19260,
                         "TDS Amount": 192,
                         "Net Amount Paid": 19068,
-                        "TDS Deducted On": "2025-10-31",
+                        "TDS Deducted On": "",
                         "TDS Deposited On": "",
                         "Challan No.": "",
                         "Challan Date": ""
@@ -579,7 +588,7 @@
                         "Month": "October",
                         "Deductee Name": "Chetna Shekhar",
                         "TDS Section": "194 IA",
-                        "TDS Rate": 10%,
+                        "TDS Rate (%)": 0.1,
                         "Invoice Date": "",
                         "Invoice No.": "",
                         "Invoice Amount": 139072,
@@ -632,6 +641,9 @@
                     <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
                     <td class="currency">${formatCurrency(item['Net Amount Paid'])}</td>
                     <td>${formatDate(item['TDS Deducted On'])}</td>
+                    <td>${formatDate(item['TDS Deposited On'])}</td>
+                    <td>${item['Challan No.'] || '-'}</td>
+                    <td>${formatDate(item['Challan Date'])}</td>
                     <td><span class="status-badge ${status === 'Paid' ? 'status-filed' : 'status-pending'}">${status}</span></td>
                 `;
                 q3SectionABody.appendChild(row);
@@ -647,9 +659,15 @@
                     <td>${item['Deductee Name']}</td>
                     <td>${item['TDS Section']}</td>
                     <td>${item['TDS Rate (%)']?.toFixed(2) || '-'}%</td>
+                    <td>${formatDate(item['Invoice Date'])}</td>
+                    <td>${item['Invoice No.'] || '-'}</td>
                     <td class="currency">${formatCurrency(item['Invoice Amount'])}</td>
                     <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
                     <td class="currency">${typeof item['Net Amount Paid'] === 'string' ? item['Net Amount Paid'] : formatCurrency(item['Net Amount Paid'])}</td>
+                    <td>${formatDate(item['TDS Deducted On'])}</td>
+                    <td>${formatDate(item['TDS Deposited On'])}</td>
+                    <td>${item['Challan No.'] || '-'}</td>
+                    <td>${formatDate(item['Challan Date'])}</td>
                     <td><span class="status-badge ${status === 'Paid' ? 'status-filed' : 'status-pending'}">${status}</span></td>
                 `;
                 q3SectionBBody.appendChild(row);
@@ -678,7 +696,6 @@
                 if (el.dataset.type === 'invoice') el.textContent = formatCurrency(q3TotalInvoice);
                 if (el.dataset.type === 'tds') el.textContent = formatCurrency(q3TotalTds);
                 if (el.dataset.type === 'count') el.textContent = q3TotalDeductees;
-                if (el.dataset.type === 'compliance') el.textContent = '100%';
             });
         }
 
