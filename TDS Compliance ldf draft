@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letz Dream Foundation</title>
+    <title>TDS Compliance Dashboard - FY 2025-26</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .quarter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .quarter-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .quarter-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            color: #333;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .status-filed {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .status-partial {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .currency {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .quarter-btn {
+                width: 100%;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+
+        .q1-color { background: linear-gradient(135deg, #FF6B6B 0%, #ff8787 100%); }
+        .q2-color { background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%); }
+        .q3-color { background: linear-gradient(135deg, #45B7D1 0%, #4ECDC4 100%); }
+        .q4-color { background: linear-gradient(135deg, #FFA07A 0%, #ffb399 100%); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 TDS Compliance Dashboard</h1>
+            <p>Financial Year 2025-26 | Real-time Compliance Tracking & Reporting</p>
+        </div>
+
+        <div class="controls">
+            <button class="quarter-btn active" onclick="showQuarter('Q1')">Q1 (Apr-Jun)</button>
+            <button class="quarter-btn" onclick="showQuarter('Q2')">Q2 (Jul-Sep)</button>
+            <button class="quarter-btn" onclick="showQuarter('Q3')">Q3 (Oct-Dec)</button>
+            <button class="quarter-btn" onclick="showQuarter('Q4')">Q4 (Jan-Mar)</button>
+        </div>
+
+        <div class="content">
+            <!-- Q1 Section -->
+            <div id="Q1" class="section active">
+                <div class="section-title">Q1 - April to June 2025</div>
+                <div class="summary-cards">
+                    <div class="card q1-color">
+                        <div class="card-label">Total Invoice Amount</div>
+                        <div class="card-value q1-summary" data-quarter="Q1" data-type="invoice">₹0</div>
+                    </div>
+                    <div class="card q1-color">
+                        <div class="card-label">Total TDS Deducted</div>
+                        <div class="card-value q1-summary" data-quarter="Q1" data-type="tds">₹0</div>
+                    </div>
+                    <div class="card q1-color">
+                        <div class="card-label">Total Deductees</div>
+                        <div class="card-value q1-summary" data-quarter="Q1" data-type="count">0</div>
+                    </div>
+                    <div class="card q1-color">
+                        <div class="card-label">Compliance Status</div>
+                        <div class="card-value">-</div>
+                    </div>
+                </div>
+                <div class="no-data">No data available for Q1</div>
+            </div>
+
+            <!-- Q2 Section -->
+            <div id="Q2" class="section">
+                <div class="section-title">Q2 - July to September 2025</div>
+                <div class="summary-cards">
+                    <div class="card q2-color">
+                        <div class="card-label">Total Invoice Amount</div>
+                        <div class="card-value q2-summary" data-quarter="Q2" data-type="invoice">₹0</div>
+                    </div>
+                    <div class="card q2-color">
+                        <div class="card-label">Total TDS Deducted</div>
+                        <div class="card-value q2-summary" data-quarter="Q2" data-type="tds">₹0</div>
+                    </div>
+                    <div class="card q2-color">
+                        <div class="card-label">Total Deductees</div>
+                        <div class="card-value q2-summary" data-quarter="Q2" data-type="count">0</div>
+                    </div>
+                    <div class="card q2-color">
+                        <div class="card-label">Compliance Status</div>
+                        <div class="card-value">-</div>
+                    </div>
+                </div>
+                <div class="no-data">No data available for Q2</div>
+            </div>
+
+            <!-- Q3 Section -->
+            <div id="Q3" class="section">
+                <div class="section-title">Q3 - October to December 2025</div>
+                <div class="summary-cards">
+                    <div class="card q3-color">
+                        <div class="card-label">Total Invoice Amount</div>
+                        <div class="card-value q3-summary" data-quarter="Q3" data-type="invoice">₹0</div>
+                    </div>
+                    <div class="card q3-color">
+                        <div class="card-label">Total TDS Deducted</div>
+                        <div class="card-value q3-summary" data-quarter="Q3" data-type="tds">₹0</div>
+                    </div>
+                    <div class="card q3-color">
+                        <div class="card-label">Total Deductees</div>
+                        <div class="card-value q3-summary" data-quarter="Q3" data-type="count">0</div>
+                    </div>
+                    <div class="card q3-color">
+                        <div class="card-label">Compliance Rate</div>
+                        <div class="card-value q3-summary" data-quarter="Q3" data-type="compliance">-</div>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Section A: Salaries & Wages (194D)</h3>
+                <div class="table-wrapper">
+                    <table id="q3-section-a">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Deductee Name</th>
+                                <th>Total Amount</th>
+                                <th>TDS Amount</th>
+                                <th>Net Amount Paid</th>
+                                <th>TDS Deducted On</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">Section B: Others (Non-Salary)</h3>
+                <div class="table-wrapper">
+                    <table id="q3-section-b">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Deductee Name</th>
+                                <th>TDS Section</th>
+                                <th>TDS Rate</th>
+                                <th>Invoice Amount</th>
+                                <th>TDS Amount</th>
+                                <th>Net Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Q4 Section -->
+            <div id="Q4" class="section">
+                <div class="section-title">Q4 - January to March 2026</div>
+                <div class="summary-cards">
+                    <div class="card q4-color">
+                        <div class="card-label">Total Invoice Amount</div>
+                        <div class="card-value q4-summary" data-quarter="Q4" data-type="invoice">₹0</div>
+                    </div>
+                    <div class="card q4-color">
+                        <div class="card-label">Total TDS Deducted</div>
+                        <div class="card-value q4-summary" data-quarter="Q4" data-type="tds">₹0</div>
+                    </div>
+                    <div class="card q4-color">
+                        <div class="card-label">Total Deductees</div>
+                        <div class="card-value q4-summary" data-quarter="Q4" data-type="count">0</div>
+                    </div>
+                    <div class="card q4-color">
+                        <div class="card-label">Compliance Status</div>
+                        <div class="card-value">-</div>
+                    </div>
+                </div>
+                <div class="no-data">No data available for Q4</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>TDS Compliance Dashboard | FY 2025-26 | Last Updated: November 05, 2025</p>
+            <p style="margin-top: 8px; font-size: 11px; opacity: 0.8;">For audit and compliance purposes. All amounts are in INR (Indian Rupees).</p>
+        </div>
+    </div>
+
+    <script>
+        // Embedded JSON data from Excel file
+        const dashboardData = {
+            "Q1": {
+                "months": ["April", "May", "June"],
+                "section_a": [],
+                "section_b": []
+            },
+            "Q2": {
+                "months": ["July", "August", "September"],
+                "section_a": [],
+                "section_b": []
+            },
+            "Q3": {
+                "months": ["October", "November", "December"],
+                "section_a": [
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Vaishali Samanta",
+                        "Total Amount": 250000,
+                        "TDS Amount": 67900,
+                        "Net Amount Paid": 182100,
+                        "TDS Deducted On": "2025-10-31",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Murugan",
+                        "Total Amount": 160000,
+                        "TDS Amount": 9055,
+                        "Net Amount Paid": 150945,
+                        "TDS Deducted On": "2025-10-31",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Kamlesh",
+                        "Total Amount": 166667,
+                        "TDS Amount": 19614,
+                        "Net Amount Paid": 147053,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Ujjwal Sinha",
+                        "Total Amount": 145833,
+                        "TDS Amount": 14235,
+                        "Net Amount Paid": 131598,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Khurshid Khan",
+                        "Total Amount": 140000,
+                        "TDS Amount": 11606,
+                        "Net Amount Paid": 128394,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Shiv Yadav",
+                        "Total Amount": 105000,
+                        "TDS Amount": 6175,
+                        "Net Amount Paid": 98825,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Komal",
+                        "Total Amount": 33750,
+                        "TDS Amount": 0,
+                        "Net Amount Paid": 33750,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Mahboob Alam (after deducting advance given)",
+                        "Total Amount": 32100,
+                        "TDS Amount": 0,
+                        "Net Amount Paid": 32100,
+                        "TDS Deducted On": "2025-11-03",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    }
+                ],
+                "section_b": [
+                    {
+                        "Month": "October",
+                        "Deductee Name": "QNS Facility",
+                        "TDS Section": "194 JA",
+                        "TDS Rate (%)": 0.02,
+                        "Invoice Date": "",
+                        "Invoice No.": "",
+                        "Invoice Amount": 41087,
+                        "TDS Amount": 696,
+                        "Net Amount Paid": "To be paid",
+                        "TDS Deducted On": "",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "S S Sharma and Associates",
+                        "TDS Section": "194 JB",
+                        "TDS Rate (%)": 0.1,
+                        "Invoice Date": "",
+                        "Invoice No.": "",
+                        "Invoice Amount": 23600,
+                        "TDS Amount": 2000,
+                        "Net Amount Paid": 21600,
+                        "TDS Deducted On": "",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Rameshwar Rajak",
+                        "TDS Section": "194 C",
+                        "TDS Rate (%)": 0.01,
+                        "Invoice Date": "",
+                        "Invoice No.": "",
+                        "Invoice Amount": 19260,
+                        "TDS Amount": 192,
+                        "Net Amount Paid": 19068,
+                        "TDS Deducted On": "",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    },
+                    {
+                        "Month": "October",
+                        "Deductee Name": "Chetna Shekhar",
+                        "TDS Section": "194 IA",
+                        "TDS Rate (%)": 0.1,
+                        "Invoice Date": "",
+                        "Invoice No.": "",
+                        "Invoice Amount": 139072,
+                        "TDS Amount": 13907,
+                        "Net Amount Paid": "To be paid",
+                        "TDS Deducted On": "",
+                        "TDS Deposited On": "",
+                        "Challan No.": "",
+                        "Challan Date": ""
+                    }
+                ]
+            },
+            "Q4": {
+                "months": ["January", "February", "March"],
+                "section_a": [],
+                "section_b": []
+            }
+        };
+
+        function formatCurrency(amount) {
+            if (!amount || isNaN(amount)) return '₹0';
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN');
+        }
+
+        function get Challan Status(tdsDeposited, tdsDeducted) {
+            if (tdsDeposited && parseFloat(tdsDeposited) === parseFloat(tdsDeducted)) {
+                Challan 'Paid';
+            } else if (tdsDeposited) {
+                Challan 'Not Paid';
+            }
+            return 'Pending';
+        }
+
+        function populateQuarterData() {
+            // Populate Q3 Section A
+            const q3SectionABody = document.querySelector('#q3-section-a tbody');
+            dashboardData.Q3.section_a.forEach(item => {
+                const status = item['TDS Deposited On'] ? 'Paid' : 'Pending';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.Month}</td>
+                    <td>${item['Deductee Name']}</td>
+                    <td class="currency">${formatCurrency(item['Total Amount'])}</td>
+                    <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
+                    <td class="currency">${formatCurrency(item['Net Amount Paid'])}</td>
+                    <td>${formatDate(item['TDS Deducted On'])}</td>
+                    <td><span class="status-badge ${status === 'Paid' ? 'status-Paid' : 'status-pending'}">${status}</span></td>
+                `;
+                q3SectionABody.appendChild(row);
+            });
+
+            // Populate Q3 Section B
+            const q3SectionBBody = document.querySelector('#q3-section-b tbody');
+            dashboardData.Q3.section_b.forEach(item => {
+                const status = item['TDS Deposited On'] ? 'Paid' : 'Pending';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.Month}</td>
+                    <td>${item['Deductee Name']}</td>
+                    <td>${item['TDS Section']}</td>
+                    <td>${item['TDS Rate (%)']?.toFixed(2) || '-'}%</td>
+                    <td class="currency">${formatCurrency(item['Invoice Amount'])}</td>
+                    <td class="currency">${formatCurrency(item['TDS Amount'])}</td>
+                    <td class="currency">${typeof item['Net Amount Paid'] === 'string' ? item['Net Amount Paid'] : formatCurrency(item['Net Amount Paid'])}</td>
+                    <td><span class="status-badge ${status === 'Filed' ? 'status-filed' : 'status-pending'}">${status}</span></td>
+                `;
+                q3SectionBBody.appendChild(row);
+            });
+
+            // Update summary cards
+            updateSummaryCards();
+        }
+
+        function updateSummaryCards() {
+            // Q3 Summary
+            const q3SectionA = dashboardData.Q3.section_a;
+            const q3SectionB = dashboardData.Q3.section_b;
+
+            const q3TotalInvoiceA = q3SectionA.reduce((sum, item) => sum + (item['Total Amount'] || 0), 0);
+            const q3TotalTdsA = q3SectionA.reduce((sum, item) => sum + (item['TDS Amount'] || 0), 0);
+
+            const q3TotalInvoiceB = q3SectionB.reduce((sum, item) => sum + (item['Invoice Amount'] || 0), 0);
+            const q3TotalTdsB = q3SectionB.reduce((sum, item) => sum + (item['TDS Amount'] || 0), 0);
+
+            const q3TotalInvoice = q3TotalInvoiceA + q3TotalInvoiceB;
+            const q3TotalTds = q3TotalTdsA + q3TotalTdsB;
+            const q3TotalDeductees = q3SectionA.length + q3SectionB.length;
+
+            document.querySelectorAll('.q3-summary').forEach(el => {
+                if (el.dataset.type === 'invoice') el.textContent = formatCurrency(q3TotalInvoice);
+                if (el.dataset.type === 'tds') el.textContent = formatCurrency(q3TotalTds);
+                if (el.dataset.type === 'count') el.textContent = q3TotalDeductees;
+                if (el.dataset.type === 'compliance') el.textContent = '100%';
+            });
+        }
+
+        function showQuarter(quarter) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(quarter);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+
+            // Update button styling
+            const buttons = document.querySelectorAll('.quarter-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', populateQuarterData);
+    </script>
+</body>
+</html>
